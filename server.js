@@ -6,7 +6,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoute.js";
 import categoryRoutes from "./routes/categoryRoute.js";
 import productRoutes from "./routes/productRoute.js";
-
+import cors from "cors";
 //configure env
 dotenv.config();
 
@@ -14,6 +14,15 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// CORS Configuration
+const corsOptions = {
+  origin: "http://localhost:3000", // For local development
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true,
+};
+
+app.use(cors(corsOptions)); // Use CORS middleware
 
 //middleware
 app.use(express.json());

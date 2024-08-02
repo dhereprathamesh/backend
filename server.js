@@ -7,38 +7,50 @@ import authRoutes from "./routes/authRoute.js";
 import categoryRoutes from "./routes/categoryRoute.js";
 import productRoutes from "./routes/productRoute.js";
 import cors from "cors";
-//configure env
+
+// Configure environment variables
 dotenv.config();
 
-//databaseConfig
+// Connect to the database
 connectDB();
 
 const app = express();
 
 // CORS Configuration
 const corsOptions = {
-  origin: "http://localhost:3000", // For local development
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "https://ecommerce-2hzp.onrender.com",
+      "http://localhost:3000",
+    ];
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: "GET,POST,PUT,DELETE",
-  credentials: true,
+  credentials: true, // Allow credentials (cookies, headers)
 };
 
 app.use(cors(corsOptions)); // Use CORS middleware
 
-//middleware
+// Middleware
 app.use(express.json());
 app.use(morgan("dev"));
 
-//routes
+// Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
 
-//port
+// Port
 const PORT = process.env.PORT || 8080;
 
+// Start server
 app.listen(PORT, () => {
   console.log(
-    `server running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
+    `Server running in ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
       .white
   );
 });

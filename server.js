@@ -6,9 +6,6 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoute.js";
 import categoryRoutes from "./routes/categoryRoute.js";
 import productRoutes from "./routes/productRoute.js";
-import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
 
 //configure env
 dotenv.config();
@@ -22,31 +19,12 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-// Configure CORS
-app.use(
-  cors({
-    origin: "*", // Update this to restrict allowed origins
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-  })
-);
-
-// Path resolution
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use(express.static(path.join(__dirname, "./client/build")));
-
 //routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
 
-// Rest API
-app.use("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/build/index.html"));
-});
-
+//port
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
